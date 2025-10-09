@@ -1,33 +1,45 @@
 package com.varunkumar.myapplication.data.repository
 
+import com.varunkumar.myapplication.data.datasource.AudioDataSource
 import com.varunkumar.myapplication.data.datasource.LocalDataSource
 import com.varunkumar.myapplication.data.datasource.SensorDataSource
 import com.varunkumar.myapplication.data.mappers.toEntity
+import com.varunkumar.myapplication.data.model.RawSensorData
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @Singleton
 class SleepRepositoryImpl @Inject constructor(
-    private val sensorDataSource: SensorDataSource,
-    private val localDataSource: LocalDataSource
+    private val sensorDataSource: SensorDataSource, // for sensors
+    private val audioDataSource: AudioDataSource, // for microphone
+    private val localDataSource: LocalDataSource // for database
 ) : SleepRepository {
-
     // a piece of work that can be actively controlled
     private var trackingJob: Job? = null
 
     override suspend fun startTracking() {
         trackingJob?.cancel() // safety measure -> prevent multiple redundant jobs
 
-        trackingJob = CoroutineScope(Dispatchers.IO).launch {
-            sensorDataSource.startTracking().collectLatest { rawData ->
-                localDataSource.insertSleepSession(rawData.toEntity())
-            }
-        }
+        val sensorFlow = sensorDataSource.startTracking()
+        val audioFlow = audioDataSource.startTracking()
+
+        trackingJob = combine(sensorFlow, audioFlow) { sensorReading, audioReading ->
+            RawSensorData(
+                timestamp = System.currentTimeMillis(),
+                accX = sensorReading.accX,
+                accY = sensorReading.accY,
+                accZ = sensorReading.accZ,
+                audioAmplitude = audioReading
+            )
+        }.onEach { combinedData ->
+            localDataSource.insertSleepSession(combinedData.toEntity())
+        }.launchIn(CoroutineScope(Dispatchers.IO))
     }
 
     override suspend fun stopTracking() {

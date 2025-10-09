@@ -10,4 +10,5 @@ data class SleepSessionEntity(
     val accX: Float,
     val accY: Float,
     val accZ: Float,
+    val audioAmplitude: Int
 )

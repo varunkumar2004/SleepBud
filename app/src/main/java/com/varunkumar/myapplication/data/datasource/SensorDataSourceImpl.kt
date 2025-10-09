@@ -5,6 +5,7 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.media.MediaRecorder
 import android.util.Log
 import com.varunkumar.myapplication.data.model.RawSensorData
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -13,6 +14,7 @@ import jakarta.inject.Singleton
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import java.util.Timer
 
 @Singleton
 class AndroidSensorDataSource @Inject constructor(
@@ -31,7 +33,8 @@ class AndroidSensorDataSource @Inject constructor(
                             timestamp = System.currentTimeMillis(),
                             accX = it.values[0],
                             accY = it.values[1],
-                            accZ = it.values[2]
+                            accZ = it.values[2],
+                            audioAmplitude = 0
                         )
 
                         callback.trySend(rawData)

@@ -2,6 +2,9 @@ package com.varunkumar.myapplication.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.SQLiteConnection
+import androidx.sqlite.execSQL
 import com.varunkumar.myapplication.data.local.SleepDatabase
 import com.varunkumar.myapplication.data.local.SleepSessionDao
 import dagger.Module
@@ -19,11 +22,17 @@ object AppModule {
     fun provideSleepDatabase(
         @ApplicationContext context: Context
     ) : SleepDatabase {
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(connection: SQLiteConnection) {
+                connection.execSQL("ALTER TABLE sleep_session_data ADD COLUMN audioAmplitude INTEGER NOT NULL DEFAULT 0")
+            }
+        }
+
         return Room.databaseBuilder(
             context.applicationContext,
             SleepDatabase::class.java,
             "sleep_database"
-        ).build()
+        ).addMigrations(MIGRATION_1_2).build()
     }
 
     @Provides

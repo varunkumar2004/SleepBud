@@ -4,5 +4,6 @@ data class RawSensorData(
     val timestamp: Long,
     val accX: Float,
     val accY: Float,
-    val accZ: Float
+    val accZ: Float,
+    val audioAmplitude: Int
 )

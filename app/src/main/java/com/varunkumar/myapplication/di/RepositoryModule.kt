@@ -1,5 +1,7 @@
 package com.varunkumar.myapplication.di
 
+import android.media.MediaRecorder
+import com.varunkumar.myapplication.data.datasource.AndroidAudioDataSource
 import com.varunkumar.myapplication.data.datasource.AndroidSensorDataSource
 import com.varunkumar.myapplication.data.datasource.SensorDataSource
 import com.varunkumar.myapplication.data.repository.SleepRepository
@@ -24,5 +26,11 @@ abstract class RepositoryModule {
     abstract fun bindSensorDataSource(
         androidSensorDataSource: AndroidSensorDataSource
     ): SensorDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindAudioDataSource(
+        androidAudioSource: AndroidAudioDataSource
+    ): MediaRecorder.AudioSource
 }
 
