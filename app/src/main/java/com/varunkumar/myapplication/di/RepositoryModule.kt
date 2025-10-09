@@ -1,5 +1,7 @@
 package com.varunkumar.myapplication.di
 
+import com.varunkumar.myapplication.data.datasource.AndroidSensorDataSource
+import com.varunkumar.myapplication.data.datasource.SensorDataSource
 import com.varunkumar.myapplication.data.repository.SleepRepository
 import com.varunkumar.myapplication.data.repository.SleepRepositoryImpl
 import dagger.Binds
@@ -16,5 +18,11 @@ abstract class RepositoryModule {
     abstract fun bindSleepRepository(
         sleepRepositoryImpl: SleepRepositoryImpl
     ) : SleepRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSensorDataSource(
+        androidSensorDataSource: AndroidSensorDataSource
+    ): SensorDataSource
 }
 
