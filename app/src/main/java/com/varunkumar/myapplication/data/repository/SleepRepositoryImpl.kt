@@ -3,6 +3,8 @@ package com.varunkumar.myapplication.data.repository
 import com.varunkumar.myapplication.data.datasource.AudioDataSource
 import com.varunkumar.myapplication.data.datasource.LocalDataSource
 import com.varunkumar.myapplication.data.datasource.SensorDataSource
+import com.varunkumar.myapplication.data.local.entity.SleepFeatureEntity
+import com.varunkumar.myapplication.data.local.entity.SleepSessionEntity
 import com.varunkumar.myapplication.data.mappers.toEntity
 import com.varunkumar.myapplication.data.model.RawSensorData
 import jakarta.inject.Inject
@@ -41,12 +43,28 @@ class SleepRepositoryImpl @Inject constructor(
                 audioAmplitude = audioReading
             )
         }.onEach { combinedData ->
-            localDataSource.insertSleepSession(combinedData.toEntity())
+            localDataSource.insertSleepData(combinedData.toEntity())
         }.launchIn(CoroutineScope(Dispatchers.IO))
     }
 
     override suspend fun stopTracking() {
         trackingJob?.cancel()
         trackingJob = null
+    }
+
+    override suspend fun getRawDataForLastSession(): List<SleepSessionEntity> {
+        return localDataSource.getAllRawSleepData()
+    }
+
+    override suspend fun saveFeatures(features: List<SleepFeatureEntity>) {
+        localDataSource.insertSleepFeatures(features)
+    }
+
+    override suspend fun clearRawData() {
+        localDataSource.clearAllRawSleepData()
+    }
+
+    override suspend fun clearFeatures() {
+        localDataSource.clearAllFeatures()
     }
 }

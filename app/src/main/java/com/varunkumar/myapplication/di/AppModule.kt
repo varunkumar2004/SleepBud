@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.sqlite.execSQL
 import com.varunkumar.myapplication.data.local.SleepDatabase
-import com.varunkumar.myapplication.data.local.SleepSessionDao
+import com.varunkumar.myapplication.data.local.dao.SleepFeatureDao
+import com.varunkumar.myapplication.data.local.dao.SleepSessionDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,11 +36,27 @@ object AppModule {
             }
         }
 
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // SQL command to create the new table for processed features
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `sleep_features` (" +
+                            "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                            "`windowTimestamp` INTEGER NOT NULL, " +
+                            "`motionVariance` REAL NOT NULL, " +
+                            "`rotationVariance` REAL NOT NULL, " +
+                            "`averageAmplitude` REAL NOT NULL, " +
+                            "`peakAmplitude` INTEGER NOT NULL, " +
+                            "`predictedStage` TEXT)"
+                )
+            }
+        }
+
         return Room.databaseBuilder(
             context.applicationContext,
             SleepDatabase::class.java,
             "sleep_database"
-        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3).build()
+        ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build()
     }
 
     @Provides
@@ -49,5 +65,13 @@ object AppModule {
         database : SleepDatabase
     ) : SleepSessionDao {
         return database.sleepSessionDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSleepFeatureDao(
+        database : SleepDatabase
+    ) : SleepFeatureDao {
+        return database.sleepFeatureDao()
     }
 }

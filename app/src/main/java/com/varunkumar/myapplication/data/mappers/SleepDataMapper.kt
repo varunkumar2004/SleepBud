@@ -1,6 +1,6 @@
 package com.varunkumar.myapplication.data.mappers
 
-import com.varunkumar.myapplication.data.local.SleepSessionEntity
+import com.varunkumar.myapplication.data.local.entity.SleepSessionEntity
 import com.varunkumar.myapplication.data.model.RawSensorData
 
 fun RawSensorData.toEntity(): SleepSessionEntity {
