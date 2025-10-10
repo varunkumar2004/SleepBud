@@ -9,6 +9,9 @@ fun RawSensorData.toEntity(): SleepSessionEntity {
         accX = this.accX,
         accY = this.accY,
         accZ = this.accZ,
+        gyroX = this.gyroX,
+        gyroY = this.gyroY,
+        gyroZ = this.gyroZ,
         audioAmplitude = this.audioAmplitude
     )
 }

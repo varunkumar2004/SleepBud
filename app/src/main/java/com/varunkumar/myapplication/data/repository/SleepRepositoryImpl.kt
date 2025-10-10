@@ -35,6 +35,9 @@ class SleepRepositoryImpl @Inject constructor(
                 accX = sensorReading.accX,
                 accY = sensorReading.accY,
                 accZ = sensorReading.accZ,
+                gyroX = sensorReading.gyroX,
+                gyroY = sensorReading.gyroY,
+                gyroZ = sensorReading.gyroZ,
                 audioAmplitude = audioReading
             )
         }.onEach { combinedData ->

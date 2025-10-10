@@ -5,5 +5,8 @@ data class RawSensorData(
     val accX: Float,
     val accY: Float,
     val accZ: Float,
+    val gyroX: Float,
+    val gyroY: Float,
+    val gyroZ: Float,
     val audioAmplitude: Int
 )

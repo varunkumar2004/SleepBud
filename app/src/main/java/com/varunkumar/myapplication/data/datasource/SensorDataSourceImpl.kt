@@ -22,22 +22,36 @@ class AndroidSensorDataSource @Inject constructor(
 ): SensorDataSource {
     private val sensorManager= context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     private val accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+    private val gyrometer = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+
+    private var latestAccel = floatArrayOf(0f, 0f, 0f)
+    private var latestGyro = floatArrayOf(0f, 0f, 0f)
 
     override fun startTracking(): Flow<RawSensorData> = callbackFlow {
-        val callback = this
         val listener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent?) {
                 event?.let {
-                    if (it.sensor.type == Sensor.TYPE_ACCELEROMETER) {
-                        val rawData = RawSensorData(
-                            timestamp = System.currentTimeMillis(),
-                            accX = it.values[0],
-                            accY = it.values[1],
-                            accZ = it.values[2],
-                            audioAmplitude = 0
-                        )
+                    when(it.sensor.type) {
+                        Sensor.TYPE_ACCELEROMETER -> {
+                            latestAccel = it.values.clone()
 
-                        callback.trySend(rawData)
+                            val rawData = RawSensorData(
+                                timestamp = System.currentTimeMillis(),
+                                accX = it.values[0],
+                                accY = it.values[1],
+                                accZ = it.values[2],
+                                gyroX = latestGyro[0],
+                                gyroY = latestGyro[1],
+                                gyroZ = latestGyro[2],
+                                audioAmplitude = 0
+                            )
+
+                            trySend(rawData)
+                        }
+
+                        Sensor.TYPE_GYROSCOPE -> {
+                            latestGyro = it.values.clone()
+                        }
                     }
                 }
             }
@@ -48,6 +62,8 @@ class AndroidSensorDataSource @Inject constructor(
         }
 
         sensorManager.registerListener(listener, accelerometer, SensorManager.SENSOR_DELAY_NORMAL)
+        sensorManager.registerListener(listener, gyrometer, SensorManager.SENSOR_DELAY_NORMAL)
+
         awaitClose {
             sensorManager.unregisterListener(listener)
         }
