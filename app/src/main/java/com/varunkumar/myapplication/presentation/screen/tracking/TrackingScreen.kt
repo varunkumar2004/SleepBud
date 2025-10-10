@@ -1,4 +1,4 @@
-package com.varunkumar.myapplication.presentation.screens.tracking
+package com.varunkumar.myapplication.presentation.screen.tracking
 
 import android.Manifest
 import androidx.compose.foundation.layout.Arrangement

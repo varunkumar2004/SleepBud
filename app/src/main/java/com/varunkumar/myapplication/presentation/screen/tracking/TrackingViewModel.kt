@@ -1,4 +1,4 @@
-package com.varunkumar.myapplication.presentation.screens.tracking
+package com.varunkumar.myapplication.presentation.screen.tracking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
