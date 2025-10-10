@@ -1,5 +1,6 @@
 package com.varunkumar.myapplication.presentation.screens.tracking
 
+import android.Manifest
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,15 +11,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun TrackingScreen(
-    viewModel: TrackingViewModel = hiltViewModel<TrackingViewModel>()
+    viewModel: TrackingViewModel = hiltViewModel()
 ) {
-    // Observe the state from the ViewModel
+    val audioPermissionState = rememberPermissionState(
+        permission = Manifest.permission.RECORD_AUDIO
+    )
+
     val uiState by viewModel.state.collectAsStateWithLifecycle()
 
     Column(
@@ -26,21 +35,55 @@ fun TrackingScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Button changes based on the 'isTracking' state
-        if (uiState.isTracking) {
-            Button(onClick = { viewModel.onStopTracking() }) {
-                Text("Stop Tracking")
-            }
+        if (audioPermissionState.status.isGranted) {
+            TrackingContent(
+                isTracking = uiState.isTracking,
+                onStartClick = { viewModel.onStartTracking() },
+                onStopClick = { viewModel.onStopTracking() }
+            )
         } else {
-            Button(onClick = { viewModel.onStartTracking() }) {
-                Text("Start Tracking")
-            }
+            PermissionRequestContent(
+                onRequestPermission = {
+                    audioPermissionState.launchPermissionRequest()
+                }
+            )
         }
+    }
+}
 
-        // Display the current status
-        Text(
-            text = if (uiState.isTracking) "Status: Collecting data..." else "Status: Idle",
-            modifier = Modifier.padding(top = 16.dp)
-        )
+@Composable
+fun TrackingContent(
+    isTracking: Boolean,
+    onStartClick: () -> Unit,
+    onStopClick: () -> Unit
+) {
+    if (isTracking) {
+        Button(onClick = onStopClick) {
+            Text("Stop Tracking")
+        }
+    } else {
+        Button(onClick = onStartClick) {
+            Text("Start Tracking")
+        }
+    }
+
+    Text(
+        text = if (isTracking) "Status: Collecting data..." else "Status: Idle",
+        modifier = Modifier.padding(top = 16.dp)
+    )
+}
+
+@Composable
+fun PermissionRequestContent(
+    onRequestPermission: () -> Unit
+) {
+    Text(
+        text = "Microphone access is required to analyze your sleep by detecting sounds like snoring.",
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(16.dp)
+    )
+
+    Button(onClick = onRequestPermission) {
+        Text("Grant Permission")
     }
 }

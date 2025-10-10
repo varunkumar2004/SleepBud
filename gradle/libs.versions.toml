@@ -9,10 +9,11 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.6"
 activityCompose = "1.9.3"
-composeBom = "2024.10.00" # ✅ Updated to latest
+composeBom = "2024.10.00"
 room = "2.8.1"
 hilt = "2.57.2"
 hiltNavigationCompose = "1.3.0"
+accompanistCore = "0.37.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +42,9 @@ androidx-room-paging = { group = "androidx.room", name = "room-paging", version.
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+
+# permission handling
+accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanistCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
