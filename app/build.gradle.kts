@@ -44,6 +44,7 @@ android {
 
     buildFeatures {
         compose = true
+        mlModelBinding = true
     }
 
     composeOptions {
@@ -67,6 +68,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.tensorflow.lite.support)
+    implementation(libs.tensorflow.lite.metadata)
+    implementation(libs.tensorflow.lite.gpu)
 
     // Testing
     testImplementation(libs.junit)
