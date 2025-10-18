@@ -22,6 +22,10 @@ class LocalDataSource @Inject constructor(
         sleepSessionDao.clearAll()
     }
 
+    suspend fun getAllFeatures(): List<SleepFeatureEntity> {
+        return sleepFeatureDao.getAllFeatures()
+    }
+
     suspend fun insertSleepFeatures(features: List<SleepFeatureEntity>) {
         sleepFeatureDao.insertAll(features)
     }

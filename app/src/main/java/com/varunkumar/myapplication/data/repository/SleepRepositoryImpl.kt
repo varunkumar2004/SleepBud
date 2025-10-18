@@ -67,4 +67,8 @@ class SleepRepositoryImpl @Inject constructor(
     override suspend fun clearFeatures() {
         localDataSource.clearAllFeatures()
     }
+
+    override suspend fun getAllFeatures(): List<SleepFeatureEntity> {
+        return localDataSource.getAllFeatures()
+    }
 }

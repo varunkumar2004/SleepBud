@@ -44,6 +44,7 @@ android {
 
     buildFeatures {
         compose = true
+        mlModelBinding = true
     }
 
     composeOptions {
@@ -89,4 +90,18 @@ dependencies {
 
     // Permissions
     implementation(libs.accompanist.permissions)
+
+    // tensorflow
+    implementation(libs.tensorflow.lite) {
+        exclude(group = "com.google.ai.edge.litert", module = "litert-api")
+    }
+    implementation(libs.tensorflow.lite.support) {
+        exclude(group = "com.google.ai.edge.litert", module = "litert-api")
+    }
+    implementation(libs.tensorflow.lite.metadata) {
+        exclude(group = "com.google.ai.edge.litert", module = "litert-api")
+    }
+
+    // navigation
+    implementation(libs.androidx.navigation.compose)
 }
