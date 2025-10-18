@@ -89,4 +89,7 @@ dependencies {
 
     // Permissions
     implementation(libs.accompanist.permissions)
+
+    // tensorflow
+    implementation(libs.tensorflow.lite)
 }
