@@ -68,9 +68,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.tensorflow.lite.support)
-    implementation(libs.tensorflow.lite.metadata)
-    implementation(libs.tensorflow.lite.gpu)
 
     // Testing
     testImplementation(libs.junit)
@@ -95,5 +92,16 @@ dependencies {
     implementation(libs.accompanist.permissions)
 
     // tensorflow
-    implementation(libs.tensorflow.lite)
+    implementation(libs.tensorflow.lite) {
+        exclude(group = "com.google.ai.edge.litert", module = "litert-api")
+    }
+    implementation(libs.tensorflow.lite.support) {
+        exclude(group = "com.google.ai.edge.litert", module = "litert-api")
+    }
+    implementation(libs.tensorflow.lite.metadata) {
+        exclude(group = "com.google.ai.edge.litert", module = "litert-api")
+    }
+
+    // navigation
+    implementation(libs.androidx.navigation.compose)
 }

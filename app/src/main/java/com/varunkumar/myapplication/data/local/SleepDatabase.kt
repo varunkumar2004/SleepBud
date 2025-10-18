@@ -12,7 +12,8 @@ import com.varunkumar.myapplication.data.local.entity.SleepSessionEntity
         SleepSessionEntity::class,
         SleepFeatureEntity::class
    ],
-    version = 4
+    version = 4,
+    exportSchema = false
 )
 abstract class SleepDatabase: RoomDatabase() {
     abstract fun sleepSessionDao(): SleepSessionDao

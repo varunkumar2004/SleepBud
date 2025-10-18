@@ -11,4 +11,6 @@ interface SleepRepository {
     suspend fun saveFeatures(features: List<SleepFeatureEntity>)
     suspend fun clearRawData()
     suspend fun clearFeatures()
+
+    suspend fun getAllFeatures(): List<SleepFeatureEntity>
 }
