@@ -1,6 +1,8 @@
 package com.varunkumar.myapplication
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -22,30 +24,28 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
 
         setContent {
             MyApplicationTheme {
 
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    val navController = rememberNavController()
+                val navController = rememberNavController()
 
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.Home.route
-                    ) {
-                        composable(route = Screen.Home.route) {
-                            HomeScreen(navController = navController)
-                        }
-                        composable(route = Screen.Tracking.route) {
-                            TrackingScreen(navController = navController)
-                        }
-                        composable(route = Screen.Report.route) {
-                            ReportScreen(navController = navController)
-                        }
+                NavHost(
+                    navController = navController,
+                    startDestination = Screen.Home.route
+                ) {
+                    composable(route = Screen.Home.route) {
+                        HomeScreen(navController = navController)
+                    }
+
+                    composable(route = Screen.Tracking.route) {
+                        TrackingScreen(navController = navController)
+                    }
+
+                    composable(route = Screen.Report.route) {
+                        ReportScreen(navController = navController)
                     }
                 }
 
