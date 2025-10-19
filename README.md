@@ -56,7 +56,7 @@ To get a local copy up and running, follow these simple steps.
 
 1.  **Clone the repository**
     ```sh
-    git clone [https://github.com/your-username/SleepBud.git](https://github.com/your-username/SleepBud.git)
+    git clone [https://github.com/varunkumar2004/SleepBud.git](https://github.com/varunkumar2004/SleepBud.git)
     ```
 2.  **Open in Android Studio**
     * Open Android Studio.
