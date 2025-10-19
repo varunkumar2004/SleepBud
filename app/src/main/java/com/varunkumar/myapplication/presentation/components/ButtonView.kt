@@ -22,17 +22,28 @@ fun ButtonView(
     modifier: Modifier = Modifier.Companion,
     cornerShape: Dp = 200.dp,
     padding: Dp = 30.dp,
-    backgroundColor: Color,
+    isEnabled: Boolean = true,
+    onClick: () -> Unit = {},
     text: String,
-    onClick: () -> Unit
+    backgroundColor: Color,
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(cornerShape))
+    var buttonModifier = modifier
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(cornerShape))
+
+    buttonModifier = if (isEnabled) {
+        buttonModifier
+            .clickable { onClick() }
             .background(backgroundColor)
             .padding(vertical = padding)
-            .clickable { onClick() },
+    } else {
+        buttonModifier
+            .background(backgroundColor)
+            .padding(vertical = padding)
+    }
+
+    Box(
+        modifier = buttonModifier,
         contentAlignment = Alignment.Companion.Center
     ) {
         Text(
