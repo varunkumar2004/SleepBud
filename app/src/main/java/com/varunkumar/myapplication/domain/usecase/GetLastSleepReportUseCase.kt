@@ -20,7 +20,6 @@ class GetLastSleepReportUseCase @Inject constructor(
         var timeInRem = 0L
 
         features.forEach {
-            // Each feature represents a 30-second window
             when {
                 it.predictedStage?.contains("Wake") == true -> timeInWake += 30
                 it.predictedStage?.contains("Light") == true -> timeInLight += 30

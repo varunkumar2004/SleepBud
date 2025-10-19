@@ -52,6 +52,10 @@ class SleepRepositoryImpl @Inject constructor(
         trackingJob = null
     }
 
+    override suspend fun updateFeatures(features: List<SleepFeatureEntity>) {
+        localDataSource.updateSleepFeatures(features) // Call a new function in LocalDataSource
+    }
+
     override suspend fun getRawDataForLastSession(): List<SleepSessionEntity> {
         return localDataSource.getAllRawSleepData()
     }

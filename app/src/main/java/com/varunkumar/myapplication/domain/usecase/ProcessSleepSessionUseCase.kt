@@ -8,25 +8,20 @@ import kotlin.math.sqrt
 
 class ProcessSleepSessionUseCase @Inject constructor(
     private val sleepRepository: SleepRepository,
-    // 1. INJECT the ClassifyFeaturesUseCase in the constructor
     private val classifyFeaturesUseCase: ClassifyFeaturesUseCase
 ) {
     /**
      * Orchestrates the entire post-session data processing pipeline.
      */
     suspend operator fun invoke() {
-        // Clear features from the previous night to start fresh.
         sleepRepository.clearFeatures()
 
-        // Get all raw data from the session that just ended.
         val rawData = sleepRepository.getRawDataForLastSession()
         if (rawData.isEmpty()) return // Nothing to process.
 
-        // Group the raw data into 30-second windows.
         val windows = rawData.groupBy { it.timestamp / 30000 }
         val features = mutableListOf<SleepFeatureEntity>()
 
-        // Loop through each window and extract features.
         for ((_, windowData) in windows) {
             if (windowData.isEmpty()) continue
 
@@ -48,12 +43,13 @@ class ProcessSleepSessionUseCase @Inject constructor(
             )
         }
 
-        // Save the newly extracted features to the database.
         if (features.isNotEmpty()) {
             sleepRepository.saveFeatures(features)
         }
+
         classifyFeaturesUseCase()
-        sleepRepository.clearFeatures()
+
+        sleepRepository.clearRawData()
     }
 
     /**

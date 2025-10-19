@@ -39,12 +39,19 @@ class TrackingViewModel @Inject constructor(
     fun onStopTracking() {
         viewModelScope.launch {
             stopTrackingUseCase()
-            _state.update { it.copy(false) }
+            // Show a processing indicator on the tracking screen
+            _state.update { it.copy(isTracking = false, isProcessing = true) }
 
-            launch(Dispatchers.IO) {
+            // Launch the heavy processing in a background job
+            val processingJob = launch(Dispatchers.IO) {
                 processSleepSessionUseCase()
             }
 
+            // Wait for the processing job to complete before navigating
+            processingJob.join()
+
+            // Hide the processing indicator and tell the UI to navigate
+            _state.update { it.copy(isProcessing = false) }
             _navigationEvent.emit(Unit)
         }
     }
