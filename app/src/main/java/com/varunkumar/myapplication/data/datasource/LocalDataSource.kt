@@ -14,6 +14,10 @@ class LocalDataSource @Inject constructor(
         sleepSessionDao.insert(sleepSessionEntity)
     }
 
+    suspend fun updateSleepFeatures(features: List<SleepFeatureEntity>) {
+        sleepFeatureDao.updateAll(features) // This calls the correct @Update DAO method
+    }
+
     suspend fun getAllRawSleepData(): List<SleepSessionEntity> {
         return sleepSessionDao.getAll()
     }

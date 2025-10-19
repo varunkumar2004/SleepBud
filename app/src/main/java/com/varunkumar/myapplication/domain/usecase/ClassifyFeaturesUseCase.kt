@@ -28,6 +28,6 @@ class ClassifyFeaturesUseCase @Inject constructor(
             feature.copy(predictedStage = predictedStageLabel)
         }
 
-        sleepRepository.saveFeatures(updatedFeatures)
+        sleepRepository.updateFeatures(updatedFeatures)
     }
 }

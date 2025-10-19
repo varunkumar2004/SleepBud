@@ -104,4 +104,7 @@ dependencies {
 
     // navigation
     implementation(libs.androidx.navigation.compose)
+
+    // sqlite
+    implementation(libs.androidx.sqlite)
 }

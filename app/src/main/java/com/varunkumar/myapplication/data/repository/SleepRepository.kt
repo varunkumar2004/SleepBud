@@ -7,6 +7,7 @@ interface SleepRepository {
     suspend fun startTracking()
     suspend fun stopTracking()
 
+    suspend fun updateFeatures(features: List<SleepFeatureEntity>)
     suspend fun getRawDataForLastSession(): List<SleepSessionEntity>
     suspend fun saveFeatures(features: List<SleepFeatureEntity>)
     suspend fun clearRawData()
