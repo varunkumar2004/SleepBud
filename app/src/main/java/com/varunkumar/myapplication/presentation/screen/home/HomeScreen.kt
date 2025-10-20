@@ -1,7 +1,6 @@
 package com.varunkumar.myapplication.presentation.screen.home
 
 import android.Manifest
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -32,7 +30,6 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.varunkumar.myapplication.domain.usecase.StopTrackingUseCase
 import com.varunkumar.myapplication.presentation.components.ApplicationTopBar
 import com.varunkumar.myapplication.presentation.components.ButtonView
 import com.varunkumar.myapplication.presentation.navigation.Screen
@@ -56,48 +53,38 @@ fun HomeScreen(
         }
     }
 
-    Scaffold(
+    Column(
         modifier = modifier,
-        topBar = { ApplicationTopBar() }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .clip(RoundedCornerShape(30.dp))
-                .background(MaterialTheme.colorScheme.surfaceContainer)
-                .padding(all = 16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            if (audioPermissionState.status.isGranted) {
-                AnimatedContent(uiState) {
-                    when {
-                        it.isTracking -> {
-                            StopTrackingContainer(
-                                modifier = Modifier.fillMaxWidth(),
-                                onClick = viewModel::onStopTracking
-                            )
-                        }
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        if (audioPermissionState.status.isGranted) {
+            AnimatedContent(uiState) {
+                when {
+                    it.isTracking -> {
+                        StopTrackingContainer(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = viewModel::onStopTracking
+                        )
+                    }
 
-                        it.isProcessing -> {
-                            TrackingProgressContainer(modifier = Modifier.fillMaxWidth())
-                        }
+                    it.isProcessing -> {
+                        TrackingProgressContainer(modifier = Modifier.fillMaxWidth())
+                    }
 
-                        else -> {
-                            ButtonsContainer(
-                                onViewReportClick = { navController.navigate(Screen.Report.route) },
-                                onStartSleepSessionClick = viewModel::onStartTracking,
-                                onChangeSleepSessionSettingsClick = { }
-                            )
-                        }
+                    else -> {
+                        ButtonsContainer(
+                            onViewReportClick = { navController.navigate(Screen.Report.route) },
+                            onStartSleepSessionClick = viewModel::onStartTracking,
+                            onChangeSleepSessionSettingsClick = { }
+                        )
                     }
                 }
-            } else {
-                PermissionRationaleContainer(
-                    onClick = { audioPermissionState.launchPermissionRequest() }
-                )
             }
+        } else {
+            PermissionRationaleContainer(
+                onClick = { audioPermissionState.launchPermissionRequest() }
+            )
         }
     }
 }
