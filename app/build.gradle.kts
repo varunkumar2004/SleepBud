@@ -107,4 +107,6 @@ dependencies {
 
     // sqlite
     implementation(libs.androidx.sqlite)
+
+    implementation(libs.androidx.compose.material.icons.extended)
 }
